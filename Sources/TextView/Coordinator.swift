@@ -11,11 +11,11 @@ extension TextView.Representable {
 
         var onCommit: (() -> Void)?
         var onEditingChanged: (() -> Void)?
-        var shouldEditInRange: ((Range<String.Index>, String) -> Bool)?
+        var shouldEditInRange: ((String, Range<String.Index>, String) -> Bool)?
 
         init(text: Binding<NSAttributedString>,
              calculatedHeight: Binding<CGFloat>,
-             shouldEditInRange: ((Range<String.Index>, String) -> Bool)?,
+             shouldEditInRange: ((String, Range<String.Index>, String) -> Bool)?,
              onEditingChanged: (() -> Void)?,
              onCommit: (() -> Void)?
         ) {
@@ -44,6 +44,10 @@ extension TextView.Representable {
         }
 
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+            if let shouldEditInRange,
+               let range = Range(range, in: textView.text) {
+                return shouldEditInRange(textView.text, range, text)
+            }
             if onCommit != nil, text == "\n" {
                 onCommit?()
                 originalText = NSAttributedString(attributedString: textView.attributedText)

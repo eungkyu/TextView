@@ -22,7 +22,7 @@ extension TextView {
         var allowsRichText: Bool
 
         var onEditingChanged: (() -> Void)?
-        var shouldEditInRange: ((Range<String.Index>, String) -> Bool)?
+        var shouldEditInRange: ((String, Range<String.Index>, String) -> Bool)?
         var onCommit: (() -> Void)?
 
         func makeUIView(context: Context) -> UIKitTextView {
